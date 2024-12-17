@@ -2,7 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "branchPrefix": "renovate/",
-  "baseBranches": ["main", "test-1"],
+  "ignoreTests": true,
+  "automergeType": "pr",
+  "automerge": true,
+  "baseBranches": ["main", "test-1", "test-2"],
   "enabledManagers": ["dockerfile", "tekton", "rpm"],
   "packageRules": [
     {
@@ -17,12 +20,12 @@
     },
     {
       "matchManagers": ["dockerfile"],
-      "matchBaseBranches": ["test-1"],
+      "matchBaseBranches": ["test-1", "test-2"],
       "enabled": false
     },
     {
       "matchManagers": ["tekton"],
-      "matchBaseBranches": ["test-1"],
+      "matchBaseBranches": ["test-1". "test-2"],
       "matchUpdateTypes": ["digest"],
       "enabled": true,
       "groupName": "Tekton Updates - test-1",
@@ -34,12 +37,25 @@
         "/^quay.io/konflux-ci/tekton-catalog//"
       ]
     }
+    {
+      "matchManagers": ["rpm"],
+      "matchBaseBranches": ["main"],
+      "groupName": "RPM Updates",
+      "commitMessageTopic": "RPM updates",
+      "enabled": true,
+      "schedule": ["at any time"],
+      "branchPrefix": "renovate/rpm/",
+      "semanticCommits": "enabled"
+    }    
   ],
   "dockerfile": {
     "enabled": true,
     "schedule": ["at any time"],
     "additionalBranchPrefix": "{{baseBranch}}/",
     "branchPrefix": "konflux/mintmaker/",
+    "ignoreTests": true,
+    "automergeType": "pr",
+    "automerge": true,
     "packageRules": [
       {
         "matchUpdateTypes": [
@@ -96,6 +112,11 @@
         ]
       }
     ]
+  },
+  "rpm": {
+    "enabled": true,
+    "baseBranches": ["main"],     
+    "schedule": ["at any time"]
   },
   "prHourlyLimit": 0
 }
